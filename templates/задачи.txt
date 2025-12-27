@@ -1,6 +1,0 @@
-+jwt yast
--structura soz chido
--famto chidom paternen ared yast
--refresh o akses i aus(avto refresh)
--+swager
--test

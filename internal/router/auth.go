@@ -13,15 +13,15 @@ func registerAuthRoutes(mux *http.ServeMux, db *sql.DB) {
 
 	// Auth HTML
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/login.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/auth/login.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/register.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/auth/register.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/logout.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/auth/logout.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/api/register", handler.Register)

@@ -13,28 +13,28 @@ func registerArticleRoutes(mux *http.ServeMux, db *sql.DB) {
 	service := article.NewService(repo)
 	handler := article.NewHandler(service)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/home.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/article/home.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/articles/detail", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/article_detail.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/article/article_detail.html"))
 		tmpl.Execute(w, nil)
 	})
 
 	mux.HandleFunc("/dashboard", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/dashboard.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/article/dashboard.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/articles/create", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/create_article.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/article/create_article.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/articles/edit", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/edit_article.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/article/edit_article.html"))
 		tmpl.Execute(w, nil)
 	})
 	mux.HandleFunc("/articles/delete", func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("./templates/delete.html"))
+		tmpl := template.Must(template.ParseFiles("./templates/article/delete.html"))
 		tmpl.Execute(w, nil)
 	})
 	// API маршруты
