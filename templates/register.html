@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - My Blog</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+<style>
+body {
+    background-color: #121212;
+    font-family: 'Open Sans', sans-serif;
+    color: #E0E0E0;
+}
+nav {
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.brand-logo {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    color: #FFD600 !important;
+}
+.container {
+    margin-top: 64px;
+    max-width: 400px;
+}
+.card {
+    border-radius: 18px;
+    background: rgba(40, 40, 40, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+    padding: 32px;
+}
+.card h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    color: #FFD600;
+    text-align: center;
+    margin-bottom: 24px;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: #E0E0E0;
+}
+input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255,214,0,0.15);
+    color: #FFD600;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+input[type="submit"]:hover {
+    background: rgba(255,214,0,0.3);
+    color: #FFF700;
+}
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #FFD600;
+}
+.error {
+    color: #FF6B6B;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-wrapper container">
+        <a href="/" class="brand-logo">MyBlog</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h1>Register</h1>
+        <div class="error" id="error"></div>
+        <form id="registerForm">
+            <label>Username:</label>
+            <input type="text" name="username" required>
+
+            <label>Email:</label>
+            <input type="email" name="email" required>
+
+            <label>Password:</label>
+            <input type="password" name="password" required>
+
+            <input type="submit" value="Register">
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorDiv = document.getElementById('error');
+
+    const form = e.target;
+    const data = {
+        username: form.username.value,
+        email: form.email.value,
+        password: form.password.value
+    };
+
+    try {
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+            // Авто-login и редирект на главную
+            window.location.href = '/';
+        } else {
+            const text = await res.text();
+            errorDiv.textContent = text;
+        }
+    } catch (err) {
+        errorDiv.textContent = 'Ошибка соединения';
+        console.error(err);
+    }
+});
+</script>
+
+</body>
+</html>

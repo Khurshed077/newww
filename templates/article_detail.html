@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article - My Blog</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+<style>
+body {
+    background-color: #121212;
+    font-family: 'Open Sans', sans-serif;
+    color: #E0E0E0;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    padding: 0 20px;
+}
+
+.brand-logo {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    color: #FFD600 !important;
+}
+
+.container {
+    max-width: 900px;
+    margin: 64px auto 32px auto;
+    padding: 0 16px;
+}
+
+.card {
+    border-radius: 18px;
+    background: rgba(40, 40, 40, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+    padding: 32px;
+    color: #E0E0E0;
+}
+
+.card h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    color: #FFD600;
+    margin-bottom: 16px;
+}
+
+.card img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 16px 0;
+    object-fit: cover;
+}
+
+.card-content p {
+    color: #CCCCCC;
+    line-height: 1.6;
+}
+
+.btn-glass {
+    display: inline-block;
+    background: rgba(255, 214, 0, 0.15);
+    color: #FFD600;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: 8px 24px;
+    text-decoration: none;
+    transition: all 0.2s;
+    margin-top: 24px;
+}
+
+.btn-glass:hover {
+    background: rgba(255, 214, 0, 0.3);
+    color: #FFF700;
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-wrapper container">
+        <a href="/" class="brand-logo">MyBlog</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card" id="article-card">
+        <h1 id="article-title">Loading...</h1>
+        <img id="article-image" style="display:none;" alt="Article Image">
+        <div class="card-content" id="article-content"></div>
+        <a href="/" class="btn-glass">Back to Home</a>
+        <a href="#" id="edit-article-btn" class="btn-glass" style="display:none;">Edit Article</a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    M.Sidenav.init(document.querySelectorAll('.sidenav'));
+
+    async function loadArticle() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        if (!id) {
+            alert("Article ID missing");
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/articles/detail?id=${id}`, { credentials: 'include' });
+            if (!res.ok) throw new Error("Failed to load article");
+            const article = await res.json();
+
+            document.getElementById("article-title").innerText = article.title;
+            const imgEl = document.getElementById("article-image");
+            if (article.image) {
+                imgEl.src = `/uploads/${article.image}`;
+                imgEl.style.display = "block";
+            }
+
+            document.getElementById("article-content").innerHTML = article.full_text;
+
+            // Проверяем авторизацию
+            const authRes = await fetch("/api/refresh", { method: "POST", credentials: 'include' });
+            if (authRes.ok) {
+                const authData = await authRes.json();
+                if (authData.admin === 2) { // или свойство admin из токена
+                    const editBtn = document.getElementById("edit-article-btn");
+                    editBtn.href = `/articles/edit?id=${article.id}`;
+                    editBtn.style.display = "inline-block";
+                }
+            }
+        } catch (e) {
+            console.error(e);
+            document.getElementById("article-title").innerText = "Failed to load article";
+        }
+    }
+
+    loadArticle();
+});
+</script>
+
+</body>
+</html>

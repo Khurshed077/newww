@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delete Article</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container center" style="margin-top:100px">
+  <h5>Delete article?</h5>
+  <p>This action cannot be undone</p>
+
+  <button class="btn red" onclick="del()">Delete</button>
+  <a href="/dashboard.html" class="btn grey">Cancel</a>
+</div>
+
+<script>
+const id = new URLSearchParams(location.search).get("id");
+
+async function del() {
+  const res = await fetch(`/api/articles/delete?id=${id}`, {
+    method: "DELETE",
+    credentials: "include"
+  });
+
+  if (res.ok) location.href = "/dashboard.html";
+  else alert(await res.text());
+}
+</script>
+
+</body>
+</html>
